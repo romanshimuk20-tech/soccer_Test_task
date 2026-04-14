@@ -1,0 +1,449 @@
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:14px;color:var(--color-text-primary)}
+.screen{display:none;padding:16px}
+.screen.active{display:block}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:0.5px solid var(--color-border-tertiary);margin:-16px -16px 20px}
+.topbar-title{font-size:13px;font-weight:500;color:var(--color-text-secondary)}
+h1{font-size:18px;font-weight:500;margin-bottom:4px}
+.subtitle{font-size:13px;color:var(--color-text-secondary);margin-bottom:20px}
+button{cursor:pointer;background:transparent;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:6px 12px;font-size:13px;color:var(--color-text-primary);font-family:var(--font-sans)}
+button:hover{background:var(--color-background-secondary)}
+button.primary{background:var(--color-background-info);color:var(--color-text-info);border-color:var(--color-border-info)}
+button.danger{color:var(--color-text-danger);border-color:var(--color-border-danger)}
+button.ghost{border:none;padding:4px 0;color:var(--color-text-secondary);font-size:13px}
+.filters{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;padding:14px;background:var(--color-background-secondary);border-radius:var(--border-radius-md)}
+.filters label{font-size:12px;color:var(--color-text-secondary);display:block;margin-bottom:3px}
+.filters select,.filters input{width:100%;padding:5px 8px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);font-size:13px;background:var(--color-background-primary);color:var(--color-text-primary);font-family:var(--font-sans)}
+table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
+th{text-align:left;padding:8px 10px;border-bottom:0.5px solid var(--color-border-tertiary);font-weight:500;font-size:12px;color:var(--color-text-secondary)}
+td{padding:8px 10px;border-bottom:0.5px solid var(--color-border-tertiary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+tr:last-child td{border-bottom:none}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:500;background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.signal{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:500}
+.sig-budget{background:#E1F5EE;color:#085041}
+.sig-contract{background:#FAEEDA;color:#633806}
+.sig-output{background:#E6F1FB;color:#0C447C}
+.sig-creative{background:#EEEDFE;color:#3C3489}
+.opp-high{color:#085041;font-weight:500}
+.opp-med{color:#633806;font-weight:500}
+.opp-low{color:var(--color-text-secondary)}
+.toast{background:var(--color-background-success);color:var(--color-text-success);padding:8px 14px;border-radius:var(--border-radius-md);font-size:13px;margin-bottom:12px;display:none}
+.toast.show{display:block}
+.stat-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:20px}
+.stat-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px 12px}
+.stat-card .label{font-size:11px;color:var(--color-text-secondary);margin-bottom:4px}
+.stat-card .value{font-size:15px;font-weight:500}
+.section{margin-bottom:20px}
+.section-title{font-size:11px;font-weight:500;margin-bottom:10px;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.04em}
+.insight{background:var(--color-background-secondary);border-left:2px solid var(--color-border-info);padding:12px 14px;border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;font-size:13px;line-height:1.6;color:var(--color-text-secondary);margin-top:16px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.player-name{font-size:20px;font-weight:500;margin-bottom:4px}
+.player-meta{font-size:13px;color:var(--color-text-secondary);margin-bottom:16px}
+.shortlist-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:12px 14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.shortlist-card-info{flex:1;min-width:0}
+.shortlist-card-actions{display:flex;gap:8px;flex-shrink:0}
+.cta-bar{margin-top:16px;padding-top:16px;border-top:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;gap:12px}
+.note{font-size:12px;color:var(--color-text-secondary)}
+.compare-table{width:100%;border-collapse:collapse;font-size:13px}
+.compare-table th{padding:8px 12px;border-bottom:0.5px solid var(--color-border-tertiary);font-weight:500;font-size:13px;text-align:left}
+.compare-table td{padding:8px 12px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.compare-table tr td:first-child{color:var(--color-text-secondary);font-size:12px;width:140px}
+.compare-table .best{font-weight:500;color:var(--color-text-success)}
+.shortlist-count{font-size:12px;background:var(--color-background-info);color:var(--color-text-info);padding:2px 8px;border-radius:10px;margin-left:8px}
+.opp-box{margin-top:14px;padding:10px 12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);font-size:13px}
+.logic-note{font-size:11px;color:var(--color-text-secondary);margin-top:4px}
+.empty{padding:20px 0;font-size:13px;color:var(--color-text-secondary)}
+</style>
+
+<div id="s1" class="screen active">
+  <div class="topbar">
+    <span class="topbar-title">Player Intelligence Platform</span>
+    <button onclick="go('s3')">Shortlist <span class="shortlist-count" id="sc1">0</span></button>
+  </div>
+  <h1>Find transfer targets</h1>
+  <p class="subtitle">Filter by role, performance, and market value</p>
+  <div id="toast1" class="toast"></div>
+  <div class="filters">
+    <div>
+      <label>Position</label>
+      <select id="fpos" onchange="renderTable()">
+        <option value="">All positions</option>
+        <option>Striker</option><option>Winger</option><option>Midfielder</option><option>Centre Back</option><option>Full Back</option>
+      </select>
+    </div>
+    <div>
+      <label>League</label>
+      <select id="fleague" onchange="renderTable()">
+        <option value="">All leagues</option>
+        <option>Eredivisie</option>
+        <option>Belgian Pro League</option>
+        <option>Danish Superliga</option>
+        <option>Austrian Bundesliga</option>
+        <option>2. Bundesliga</option>
+      </select>
+    </div>
+    <div>
+      <label>Max age</label>
+      <input type="number" id="fage" placeholder="e.g. 26" min="16" max="40" oninput="renderTable()">
+    </div>
+    <div>
+      <label>Max market value (€M)</label>
+      <input type="number" id="fval" placeholder="e.g. 5" min="0" step="0.1" oninput="renderTable()">
+    </div>
+    <div>
+      <label>Min minutes played</label>
+      <input type="number" id="fmins" placeholder="e.g. 900" min="0" oninput="renderTable()">
+    </div>
+    <div>
+      <label>Min goals per 90</label>
+      <input type="number" id="fg90" placeholder="e.g. 0.3" min="0" step="0.01" oninput="renderTable()">
+    </div>
+    <div>
+      <label>Min assists per 90</label>
+      <input type="number" id="fa90" placeholder="e.g. 0.2" min="0" step="0.01" oninput="renderTable()">
+    </div>
+  </div>
+  <div style="overflow-x:auto">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:120px">Player</th>
+          <th style="width:34px">Age</th>
+          <th style="width:110px">Club</th>
+          <th style="width:110px">League</th>
+          <th style="width:80px">Position</th>
+          <th style="width:48px">G/90</th>
+          <th style="width:48px">A/90</th>
+          <th style="width:68px">Value</th>
+          <th style="width:100px">Signal</th>
+          <th style="width:60px">Opp.</th>
+          <th style="width:150px"></th>
+        </tr>
+      </thead>
+      <tbody id="ptbody"></tbody>
+    </table>
+  </div>
+  <p class="note" style="margin-top:10px" id="result-count"></p>
+</div>
+
+<div id="s2" class="screen">
+  <div class="topbar">
+    <span class="topbar-title">Player Intelligence Platform</span>
+    <button onclick="go('s3')">Shortlist <span class="shortlist-count" id="sc2">0</span></button>
+  </div>
+  <button class="ghost" onclick="go('s1')">← Back to search</button>
+  <div id="toast2" class="toast" style="margin-top:10px"></div>
+  <div style="margin-top:14px">
+    <div class="player-name" id="ph-name"></div>
+    <div class="player-meta" id="ph-meta"></div>
+    <div id="ph-signals" style="margin-bottom:16px;display:flex;gap:8px;flex-wrap:wrap"></div>
+  </div>
+  <div class="section-title">Summary</div>
+  <div class="stat-grid" id="sg"></div>
+  <div class="section">
+    <div class="section-title">Performance per 90</div>
+    <div id="perf-grid" style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:20px"></div>
+  </div>
+  <div class="opp-box" id="opp-box"></div>
+  <div class="section" style="margin-top:16px">
+    <div class="section-title">Scout note</div>
+    <p id="snote" style="font-size:13px;line-height:1.7;color:var(--color-text-secondary)"></p>
+  </div>
+  <div class="actions" style="margin-top:12px" id="p2actions"></div>
+</div>
+
+<div id="s3" class="screen">
+  <div class="topbar">
+    <span class="topbar-title">Player Intelligence Platform</span>
+    <button onclick="go('s1')">← Search</button>
+  </div>
+  <h1>Shortlist</h1>
+  <p class="subtitle">Selected transfer targets</p>
+  <div id="sl-list"></div>
+  <div class="cta-bar">
+    <button class="primary" onclick="doCompare()">Compare selected</button>
+    <span class="note" id="compare-note"></span>
+  </div>
+</div>
+
+<div id="s4" class="screen">
+  <div class="topbar">
+    <span class="topbar-title">Player Intelligence Platform</span>
+    <button onclick="go('s1')">← Search</button>
+  </div>
+  <button class="ghost" onclick="go('s3')">← Back to shortlist</button>
+  <h1 style="margin-top:14px">Player comparison</h1>
+  <p class="subtitle">Core transfer metrics side by side</p>
+  <div style="overflow-x:auto">
+    <table class="compare-table" id="ctable"></table>
+  </div>
+  <div class="insight" id="cinsight"></div>
+  <div class="actions" style="margin-top:16px">
+    <button onclick="go('s3')">← Back to shortlist</button>
+    <button onclick="go('s1')">Return to search</button>
+  </div>
+</div>
+
+<script>
+const players=[
+  {id:1,name:"Luka Petrovic",age:23,club:"Roda JC",league:"Eredivisie",pos:"Striker",mins:2210,g90:0.61,a90:0.22,shots90:3.1,xg90:0.54,kp90:1.2,valuem:3.5,contract:"Jun 2025"},
+  {id:2,name:"Emil Sørensen",age:22,club:"Randers FC",league:"Danish Superliga",pos:"Winger",mins:1980,g90:0.41,a90:0.45,shots90:2.4,xg90:0.37,kp90:2.1,valuem:2.1,contract:"Jun 2025"},
+  {id:3,name:"Matteo Klein",age:25,club:"FC Liefering",league:"Austrian Bundesliga",pos:"Midfielder",mins:2640,g90:0.18,a90:0.38,shots90:1.8,xg90:0.15,kp90:2.8,valuem:1.8,contract:"Jun 2026"},
+  {id:4,name:"Arda Demir",age:21,club:"Beerschot",league:"Belgian Pro League",pos:"Winger",mins:1620,g90:0.33,a90:0.28,shots90:2.2,xg90:0.30,kp90:1.7,valuem:2.8,contract:"Jun 2027"},
+  {id:5,name:"Jonas Verbeek",age:26,club:"Go Ahead Eagles",league:"Eredivisie",pos:"Full Back",mins:2890,g90:0.08,a90:0.31,shots90:0.9,xg90:0.07,kp90:1.9,valuem:4.2,contract:"Jun 2026"},
+  {id:6,name:"Pavel Kostov",age:24,club:"FC Midtjylland",league:"Danish Superliga",pos:"Centre Back",mins:2450,g90:0.12,a90:0.09,shots90:0.6,xg90:0.10,kp90:0.8,valuem:3.0,contract:"Jun 2027"}
+];
+
+const notes={
+  1:"Mobile centre-forward with strong movement in behind. Consistent finisher in transition. Contract expires in summer — currently at a club facing potential relegation.",
+  2:"Creative wide forward. Strong in 1v1 situations and generates chances at a high rate for his market level. Expiring contract makes him accessible without a fee.",
+  3:"Deep-lying playmaker with excellent passing range and positional discipline. Low profile but consistent performer. Available at low cost relative to output.",
+  4:"Young Turkish winger with direct running and good acceleration. Still developing consistency but has two years remaining on contract — long-term investment profile.",
+  5:"Attacking full back with strong crossing output and aerobic capacity. Eredivisie experience adds market confidence. Solid but not a pressing urgency to act.",
+  6:"Composed ball-playing centre-back. Comfortable under pressure, strong in aerial duels. Under contract until 2027 — window to act is not imminent."
+};
+
+const foot={1:"Right",2:"Left",3:"Right",4:"Right",5:"Left",6:"Right"};
+
+function contractYear(p){return parseInt(p.contract.split(" ")[1]);}
+
+function signals(p){
+  const sigs=[];
+  const cy=contractYear(p);
+  if(p.valuem<=2.5)sigs.push({label:"Budget fit",cls:"sig-budget"});
+  if(cy<=2025)sigs.push({label:"Contract opportunity",cls:"sig-contract"});
+  if(p.g90>=0.4)sigs.push({label:"High output",cls:"sig-output"});
+  if(p.kp90>=2.0)sigs.push({label:"Creative value",cls:"sig-creative"});
+  return sigs;
+}
+
+function opportunity(p){
+  const cy=contractYear(p);
+  const expiring=cy<=2025;
+  const budgetFit=p.valuem<=2.5;
+  const goodOutput=p.g90>=0.35||p.kp90>=2.0;
+  if((expiring||budgetFit)&&goodOutput)return{label:"High",cls:"opp-high"};
+  if(expiring||budgetFit||goodOutput)return{label:"Medium",cls:"opp-med"};
+  return{label:"Low",cls:"opp-low"};
+}
+
+function fmt(p){return "€"+p.valuem.toFixed(1)+"M";}
+
+let shortlist=[];
+let currentPlayer=null;
+
+function go(screen){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(screen).classList.add('active');
+  updateCounts();
+  if(screen==='s3')renderShortlist();
+  if(screen==='s4')renderCompare();
+}
+
+function updateCounts(){
+  ['sc1','sc2'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.textContent=shortlist.length;
+  });
+}
+
+function showToast(id,msg){
+  const t=document.getElementById(id);
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+function addToShortlist(pid,toastId){
+  if(shortlist.find(p=>p.id===pid)){showToast(toastId,'Already on shortlist');return;}
+  shortlist.push(players.find(x=>x.id===pid));
+  updateCounts();
+  showToast(toastId,players.find(x=>x.id===pid).name+' added to shortlist');
+}
+
+function renderTable(){
+  const pos=document.getElementById('fpos').value;
+  const league=document.getElementById('fleague').value;
+  const age=parseFloat(document.getElementById('fage').value)||99;
+  const val=parseFloat(document.getElementById('fval').value)||999;
+  const mins=parseFloat(document.getElementById('fmins').value)||0;
+  const g90=parseFloat(document.getElementById('fg90').value)||0;
+  const a90=parseFloat(document.getElementById('fa90').value)||0;
+
+  const filtered=players.filter(p=>{
+    if(pos&&p.pos!==pos)return false;
+    if(league&&p.league!==league)return false;
+    if(p.age>age)return false;
+    if(p.valuem>val)return false;
+    if(p.mins<mins)return false;
+    if(p.g90<g90)return false;
+    if(p.a90<a90)return false;
+    return true;
+  });
+
+  const tbody=document.getElementById('ptbody');
+  if(filtered.length===0){
+    tbody.innerHTML='<tr><td colspan="11" style="padding:20px 10px;color:var(--color-text-secondary)">No players match the current filters.</td></tr>';
+    document.getElementById('result-count').textContent='';
+    return;
+  }
+  document.getElementById('result-count').textContent=filtered.length+' player'+(filtered.length===1?'':'s')+' found';
+
+  tbody.innerHTML=filtered.map(p=>{
+    const sigs=signals(p);
+    const opp=opportunity(p);
+    const sigHtml=sigs.length?`<span class="signal ${sigs[0].cls}">${sigs[0].label}</span>`:'<span style="color:var(--color-text-secondary);font-size:12px">—</span>';
+    return `<tr>
+      <td style="font-weight:500">${p.name}</td>
+      <td>${p.age}</td>
+      <td>${p.club}</td>
+      <td>${p.league}</td>
+      <td><span class="badge">${p.pos}</span></td>
+      <td>${p.g90.toFixed(2)}</td>
+      <td>${p.a90.toFixed(2)}</td>
+      <td>${fmt(p)}</td>
+      <td>${sigHtml}</td>
+      <td class="${opp.cls}">${opp.label}</td>
+      <td><div style="display:flex;gap:6px">
+        <button onclick="viewProfile(${p.id})">Profile</button>
+        <button onclick="addToShortlist(${p.id},'toast1')">+ List</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+function viewProfile(pid){
+  const p=players.find(x=>x.id===pid);
+  currentPlayer=p;
+  const sigs=signals(p);
+  const opp=opportunity(p);
+
+  document.getElementById('ph-name').textContent=p.name;
+  document.getElementById('ph-meta').textContent=p.age+' yrs · '+p.club+' · '+p.league+' · '+p.pos;
+  document.getElementById('ph-signals').innerHTML=sigs.map(s=>`<span class="signal ${s.cls}">${s.label}</span>`).join('')+`<span class="signal" style="background:var(--color-background-secondary);color:var(--color-text-secondary)">Market opp: <strong class="${opp.cls}">${opp.label}</strong></span>`;
+
+  document.getElementById('sg').innerHTML=[
+    ['Market value',fmt(p)],
+    ['Contract until',p.contract],
+    ['Dominant foot',foot[p.id]],
+    ['Minutes played',p.mins.toLocaleString()]
+  ].map(([l,v])=>`<div class="stat-card"><div class="label">${l}</div><div class="value">${v}</div></div>`).join('');
+
+  document.getElementById('perf-grid').innerHTML=[
+    ['Goals/90',p.g90.toFixed(2)],
+    ['Assists/90',p.a90.toFixed(2)],
+    ['Shots/90',p.shots90.toFixed(1)],
+    ['xG/90',p.xg90.toFixed(2)],
+    ['Key passes/90',p.kp90.toFixed(1)]
+  ].map(([l,v])=>`<div class="stat-card"><div class="label">${l}</div><div class="value">${v}</div></div>`).join('');
+
+  const cy=contractYear(p);
+  const expiring=cy<=2025;
+  let oppText='';
+  if(opp.label==='High'){
+    oppText=expiring?'Contract expires this summer — potential free transfer or reduced fee window.':'Budget-efficient option relative to current output level.';
+  } else if(opp.label==='Medium'){
+    oppText=expiring?'Contract situation worth monitoring. May become available at reduced cost.':'Output is promising. Worth continued scouting before committing.';
+  } else {
+    oppText='No immediate contract or budget leverage. Longer-term candidate if profile fits the system.';
+  }
+  document.getElementById('opp-box').innerHTML=`<div style="font-size:11px;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px">Market opportunity: <span class="${opp.cls}">${opp.label}</span></div><div style="font-size:13px;color:var(--color-text-secondary)">${oppText}</div><div class="logic-note" style="margin-top:6px">Logic: High = low value (≤€2.5M) or expiring contract + strong output. Medium = one factor present. Low = neither.</div>`;
+
+  document.getElementById('snote').textContent=notes[p.id];
+  document.getElementById('p2actions').innerHTML=`
+    <button class="primary" onclick="addToShortlist(${p.id},'toast2')">+ Add to shortlist</button>
+    <button onclick="go('s3')">View shortlist</button>
+    <button class="ghost" onclick="go('s1')">← Back to search</button>`;
+  go('s2');
+}
+
+function shortlistTag(p){
+  const cy=contractYear(p);
+  if(cy<=2025&&p.g90>=0.4)return"Contract + goal threat";
+  if(cy<=2025)return"Expiring contract";
+  if(p.valuem<=2.0)return"Budget fit";
+  if(p.g90>=0.5)return"Goal threat";
+  if(p.kp90>=2.0)return"Creative value";
+  if(p.pos==="Centre Back")return"Defensive cover";
+  return"Worth scouting";
+}
+
+function renderShortlist(){
+  const list=document.getElementById('sl-list');
+  if(shortlist.length===0){
+    list.innerHTML='<p class="empty">No players added yet. Search and shortlist players to begin comparing.</p>';
+    document.getElementById('compare-note').textContent='Add at least 2 players to compare';
+    return;
+  }
+  list.innerHTML=shortlist.map(p=>`<div class="shortlist-card">
+    <div class="shortlist-card-info">
+      <div style="font-weight:500;margin-bottom:3px">${p.name} <span class="badge" style="margin-left:4px">${shortlistTag(p)}</span></div>
+      <div style="font-size:12px;color:var(--color-text-secondary)">${p.pos} · ${p.club} · ${fmt(p)} · Contract: ${p.contract} · G/90: ${p.g90.toFixed(2)} · A/90: ${p.a90.toFixed(2)}</div>
+    </div>
+    <div class="shortlist-card-actions">
+      <button onclick="viewProfile(${p.id})">Profile</button>
+      <button class="danger" onclick="removeFromShortlist(${p.id})">Remove</button>
+    </div>
+  </div>`).join('');
+  document.getElementById('compare-note').textContent=shortlist.length<2?'Add at least one more to compare':'';
+}
+
+function removeFromShortlist(pid){
+  shortlist=shortlist.filter(p=>p.id!==pid);
+  updateCounts();
+  renderShortlist();
+}
+
+function doCompare(){
+  if(shortlist.length<2)return;
+  go('s4');
+}
+
+function renderCompare(){
+  const rows=[
+    ['Age',p=>p.age,null],
+    ['Club',p=>p.club,null],
+    ['League',p=>p.league,null],
+    ['Position',p=>p.pos,null],
+    ['Contract until',p=>p.contract,null],
+    ['Minutes played',p=>p.mins.toLocaleString(),null],
+    ['Goals/90',p=>p.g90.toFixed(2),vals=>Math.max(...vals)],
+    ['Assists/90',p=>p.a90.toFixed(2),vals=>Math.max(...vals)],
+    ['xG/90',p=>p.xg90.toFixed(2),vals=>Math.max(...vals)],
+    ['Shots/90',p=>p.shots90.toFixed(1),vals=>Math.max(...vals)],
+    ['Key passes/90',p=>p.kp90.toFixed(1),vals=>Math.max(...vals)],
+    ['Market value',p=>fmt(p),null],
+    ['Market opportunity',p=>opportunity(p).label,null]
+  ];
+
+  const headerCols=shortlist.map(p=>`<th>${p.name}<br><span style="font-weight:400;font-size:11px;color:var(--color-text-secondary)">${p.club}</span></th>`).join('');
+  let html=`<thead><tr><th></th>${headerCols}</tr></thead><tbody>`;
+  rows.forEach(([label,getter,bestFn])=>{
+    const vals=shortlist.map(p=>getter(p));
+    const numericVals=shortlist.map(p=>parseFloat(getter(p)));
+    const bestVal=bestFn?bestFn(numericVals):null;
+    const cells=vals.map((v,i)=>{
+      const isBest=bestVal!==null&&Math.abs(numericVals[i]-bestVal)<0.001;
+      return`<td class="${isBest?'best':''}">${v}</td>`;
+    }).join('');
+    html+=`<tr><td>${label}</td>${cells}</tr>`;
+  });
+  html+=`</tbody>`;
+  document.getElementById('ctable').innerHTML=html;
+
+  const insights=[];
+  const topScorer=shortlist.reduce((a,b)=>a.g90>b.g90?a:b);
+  const topCreative=shortlist.reduce((a,b)=>a.kp90>b.kp90?a:b);
+  const lowestVal=shortlist.reduce((a,b)=>a.valuem<b.valuem?a:b);
+  const expiring=shortlist.filter(p=>contractYear(p)<=2025);
+
+  insights.push(`${topScorer.name} leads on scoring output (${topScorer.g90.toFixed(2)} G/90) — strong output for current market value of ${fmt(topScorer)}.`);
+  if(topCreative.id!==topScorer.id) insights.push(`${topCreative.name} offers stronger creative contribution (${topCreative.kp90.toFixed(1)} key passes/90) — worth further scouting if the role requires chance creation.`);
+  if(expiring.length>0) insights.push(`${expiring.map(p=>p.name).join(', ')} ${expiring.length===1?'has an':'have'} expiring contract — potential market opportunity due to contract timing.`);
+  if(lowestVal.id!==topScorer.id&&lowestVal.valuem<3) insights.push(`${lowestVal.name} is the most budget-efficient option at ${fmt(lowestVal)}.`);
+
+  document.getElementById('cinsight').innerHTML=`<strong>Scouting note</strong><br><br>`+insights.map(i=>`· ${i}`).join('<br>');
+}
+
+renderTable();
+</script>
